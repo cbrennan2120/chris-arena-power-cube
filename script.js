@@ -101,8 +101,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     renderTable();
     initDBControls();
-
-    initTooltips();
+    initTooltipDelegation();
+    initPickDelegation();
 });
 
 function initDBControls() {
@@ -191,8 +191,6 @@ function renderTable() {
         `;
         tbody.appendChild(row);
     });
-
-    initTooltips(); // Re-link tooltips for new rows
 }
 
 // Draft Simulator Logic
@@ -211,19 +209,23 @@ async function generatePack() {
 
     container.innerHTML = '';
     
-    for (const card of currentPack) {
+    for (let i = 0; i < currentPack.length; i++) {
+        const card = currentPack[i];
         const row = document.createElement('div');
         row.className = 'pack-card';
-        row.innerHTML = `<div style="padding: 20px; text-align:center;">LOADING...</div>`;
+        row.innerHTML = `<div style="padding: 20px; text-align:center; color: var(--accent);">LOADING...</div>`;
         container.appendChild(row);
 
         try {
+            // Stagger API calls to respect Scryfall rate limits
+            if (i > 0) await new Promise(r => setTimeout(r, 75));
             const res = await fetch(`https://api.scryfall.com/cards/named?fuzzy=${encodeURIComponent(card.name)}`);
             const data = await res.json();
             const imgUri = data.image_uris ? data.image_uris.normal : data.card_faces[0].image_uris.normal;
-            row.innerHTML = `<img src="${imgUri}" alt="${card.name}" onclick="makePick('${card.name}')">`;
+            // Use data-pick attribute to safely handle apostrophes in card names
+            row.innerHTML = `<img src="${imgUri}" alt="${card.name}" data-pick="${card.name.replace(/"/g, '&quot;')}">`;
         } catch (e) {
-            row.innerHTML = `<div style="padding: 20px;">${card.name}</div>`;
+            row.innerHTML = `<div style="padding: 20px; cursor:pointer;" data-pick="${card.name.replace(/"/g, '&quot;')}">${card.name}</div>`;
         }
     }
 }
@@ -260,8 +262,17 @@ function makePick(pickedName) {
 
     // Highlight pick
     document.querySelectorAll('.pack-card').forEach(el => {
-        el.style.opacity = '0.5';
-        if (el.querySelector('img').alt === pickedName) el.style.opacity = '1';
+        el.style.opacity = '0.4';
+        el.style.filter = 'grayscale(0.8)';
+        const img = el.querySelector('img');
+        const div = el.querySelector('div[data-pick]');
+        const elName = img ? img.alt : (div ? div.dataset.pick : '');
+        if (elName === pickedName) {
+            el.style.opacity = '1';
+            el.style.filter = 'none';
+            el.style.outline = '4px solid var(--accent)';
+            el.style.boxShadow = '0 0 30px var(--accent)';
+        }
     });
 }
 
@@ -294,7 +305,6 @@ function showArchetype(id) {
             ${arch.content}
         `;
         container.style.opacity = '1';
-        initTooltips(); // Re-init tooltips for new links
     }, 200);
 
     // Update nav buttons
@@ -304,40 +314,66 @@ function showArchetype(id) {
     });
 }
 
-function initTooltips() {
+// Event-delegated tooltip system — registered once, works for all .card-link elements
+function initTooltipDelegation() {
     const tooltip = document.getElementById('card-tooltip');
-    
-    document.querySelectorAll('.card-link').forEach(link => {
-        link.addEventListener('mouseenter', async (e) => {
-            const cardName = e.target.getAttribute('data-card');
-            tooltip.innerHTML = '<div style="padding: 20px; color: var(--accent); background: var(--bg-dark);">FETCHING ART...</div>';
-            tooltip.style.display = 'block';
-            
-            try {
-                const res = await fetch(`https://api.scryfall.com/cards/named?fuzzy=${encodeURIComponent(cardName)}`);
-                const data = await res.json();
-                const imgUri = data.image_uris ? data.image_uris.normal : data.card_faces[0].image_uris.normal;
-                tooltip.innerHTML = `<img src="${imgUri}" alt="${cardName}">`;
-            } catch (err) {
-                tooltip.style.display = 'none';
-            }
-        });
+    let currentCard = null;
+    let fetchController = null;
 
-        link.addEventListener('mousemove', (e) => {
-            tooltip.style.top = (e.clientY + 20) + 'px';
-            tooltip.style.left = (e.clientX + 20) + 'px';
-            
-            // Boundary checks
-            if (e.clientX + 270 > window.innerWidth) {
-                tooltip.style.left = (e.clientX - 270) + 'px';
-            }
-            if (e.clientY + 350 > window.innerHeight) {
-                tooltip.style.top = (e.clientY - 350) + 'px';
-            }
-        });
+    document.addEventListener('mouseover', async (e) => {
+        const link = e.target.closest('.card-link');
+        if (!link) return;
+        const cardName = link.getAttribute('data-card');
+        if (!cardName || cardName === currentCard) return;
+        currentCard = cardName;
 
-        link.addEventListener('mouseleave', () => {
-            tooltip.style.display = 'none';
-        });
+        // Cancel any in-flight request
+        if (fetchController) fetchController.abort();
+        fetchController = new AbortController();
+
+        tooltip.innerHTML = '<div style="padding:20px;color:var(--accent);background:#000;">FETCHING ART...</div>';
+        tooltip.style.display = 'block';
+
+        try {
+            const res = await fetch(
+                `https://api.scryfall.com/cards/named?fuzzy=${encodeURIComponent(cardName)}`,
+                { signal: fetchController.signal }
+            );
+            const data = await res.json();
+            if (data.object === 'error') { tooltip.style.display = 'none'; return; }
+            const imgUri = data.image_uris ? data.image_uris.normal : data.card_faces[0].image_uris.normal;
+            tooltip.innerHTML = `<img src="${imgUri}" alt="${cardName}">`;
+        } catch (err) {
+            if (err.name !== 'AbortError') tooltip.style.display = 'none';
+        }
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (tooltip.style.display !== 'block') return;
+        let top = e.clientY + 20;
+        let left = e.clientX + 20;
+        if (e.clientX + 280 > window.innerWidth) left = e.clientX - 280;
+        if (e.clientY + 400 > window.innerHeight) top = e.clientY - 400;
+        tooltip.style.top = top + 'px';
+        tooltip.style.left = left + 'px';
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        const link = e.target.closest('.card-link');
+        if (!link) return;
+        if (link.contains(e.relatedTarget)) return;
+        tooltip.style.display = 'none';
+        currentCard = null;
+        if (fetchController) fetchController.abort();
+    });
+}
+
+// Event-delegated click handler for P1P1 picks — handles apostrophes safely
+function initPickDelegation() {
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('.pack-card img, .pack-card div[data-pick]');
+        if (!target) return;
+        const name = target.dataset.pick || target.alt;
+        if (name) makePick(name);
     });
 }

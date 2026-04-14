@@ -89,6 +89,17 @@ body {
     animation: manaPulse 3s infinite alternate;
 }
 
+.subtitle {
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-top: 1rem;
+    background: rgba(0,0,0,0.5);
+    padding: 0.5rem 2rem;
+    display: inline-block;
+}
+
 .hero-stats {
     display: flex;
     justify-content: center;
@@ -214,6 +225,21 @@ section {
     grid-template-columns: repeat(5, 1fr);
     gap: 1.5rem;
     margin: 3rem 0;
+}
+
+.placeholder-pack {
+    grid-column: 1 / -1;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--glass);
+    border: 2px dashed var(--accent);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
 }
 
 .pack-card {
