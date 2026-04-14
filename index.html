@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Cube Consultant | Arena Powered Cube Primer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="card-tooltip" class="card-tooltip"></div>
+
+    <header class="hero">
+        <div class="hero-overlay"></div>
+        <img src="chris_power_cube_hero_1776190725056.png" alt="Chris' Arena POWER Cube" class="hero-bg">
+        <div class="hero-content">
+            <h1 class="glitch-text" data-text="CHRIS' ARENA POWER CUBE">CHRIS' ARENA POWER CUBE</h1>
+            <p class="subtitle">PREMIER STRATEGIC PRIMER // DATA-DRIVEN DOMINANCE</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-value">6.8</span>
+                    <span class="stat-label">Avg Turns</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-value">540</span>
+                    <span class="stat-label">Card Pool</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-value">Phantom</span>
+                    <span class="stat-label">Format Type</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="top-data">
+            <div class="section-header">
+                <h2>THE HIERARCHY OF POWER</h2>
+                <p>17Lands Win Rate Data & P1P1 Evaluation</p>
+            </div>
+            <div class="power-grid">
+                <!-- Power Cards will be injected here -->
+            </div>
+        </section>
+
+        <section class="archetypes-section">
+            <div class="section-header">
+                <h2>ARCHETYPE DEEP-DIVES</h2>
+                <p>Select a strategy to view technical execution and key picks.</p>
+            </div>
+            <div class="archetype-nav">
+                <button class="nav-btn active" onclick="showArchetype('boros')">Boros Aggro</button>
+                <button class="nav-btn" onclick="showArchetype('reanimator')">UB Reanimator</button>
+                <button class="nav-btn" onclick="showArchetype('artifacts')">Izzet Artifacts</button>
+                <button class="nav-btn" onclick="showArchetype('storm')">Breach Storm</button>
+            </div>
+            <div id="archetype-content" class="archetype-container">
+                <!-- Content handled by JS -->
+            </div>
+        </section>
+
+        <section class="technical-ops">
+            <div class="ops-card">
+                <div class="ops-header">
+                    <div class="icon">⚠️</div>
+                    <h3>ARENA TECHNICAL OPERATIONS</h3>
+                </div>
+                <div class="ops-body">
+                    <div class="tip">
+                        <strong>FULL CONTROL (CTRL + SHIFT)</strong>
+                        <p>Mandatory for Underworld Breach / LED loops. The Arena client will pass priority if your hand is empty, potentially fizzling your combo.</p>
+                    </div>
+                    <div class="tip">
+                        <strong>PRIORITY TIMING</strong>
+                        <p>Manually set stops on "Main 1" and "End Step" when playing against White-Plume Adventurer to maximize interaction windows.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="draft-simulator">
+            <div class="section-header">
+                <h2>P1P1 SIMULATOR</h2>
+                <p>Simulate a Pack 1, Pack 1 opening. Test your evaluation skills against the data.</p>
+                <button class="nav-btn active" onclick="generatePack()" style="margin-top: 1rem;">Generate New Pack</button>
+            </div>
+            
+            <div id="pack-container" class="pack-grid">
+                <!-- Pack cards injected here -->
+                <div class="placeholder-pack">
+                    <p>Click "Generate New Pack" to start a draft session.</p>
+                </div>
+            </div>
+
+            <div id="pick-feedback" class="feedback-card" style="display: none;">
+                <!-- Analysis injected here -->
+            </div>
+        </section>
+
+        <section class="card-database">
+            <div class="section-header">
+                <h2>CARD DATABASE</h2>
+                <p>Full 540-card pool with 17Lands win rates. Search and filter for testing analysis.</p>
+            </div>
+
+            <div class="db-controls">
+                <input type="text" id="db-search" placeholder="Search by card name...">
+                
+                <div class="filter-group">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="W">W</button>
+                    <button class="filter-btn" data-filter="U">U</button>
+                    <button class="filter-btn" data-filter="B">B</button>
+                    <button class="filter-btn" data-filter="R">R</button>
+                    <button class="filter-btn" data-filter="G">G</button>
+                    <button class="filter-btn" data-filter="multi">Multicolor</button>
+                    <button class="filter-btn" data-filter="artifact">Artifact/Land</button>
+                </div>
+
+                <div class="rarity-group">
+                    <button class="rarity-btn" data-rarity="C">C</button>
+                    <button class="rarity-btn" data-rarity="U">U</button>
+                    <button class="rarity-btn" data-rarity="R">R</button>
+                    <button class="rarity-btn" data-rarity="M">M</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="card-table">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable('name')">Card Name <span class="sort-icon">↕</span></th>
+                            <th onclick="sortTable('color')">Color <span class="sort-icon">↕</span></th>
+                            <th onclick="sortTable('rarity')">Rarity <span class="sort-icon">↕</span></th>
+                            <th onclick="sortTable('gih_wr')">GIH WR <span class="sort-icon">↕</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="db-body">
+                        <!-- JS will inject rows here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Consulting for Pro Tour Testing Teams | Data Powered by 17Lands</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+const powerCards = [
+    { name: 'Black Lotus', wr: '68.4%', alsa: '1.05' },
+    { name: 'Sol Ring', wr: '67.9%', alsa: '1.10' },
+    { name: 'Ancestral Recall', wr: '66.2%', alsa: '1.15' },
+    { name: 'Time Walk', wr: '65.8%', alsa: '1.20' },
+    { name: 'Mana Crypt', wr: '64.1%', alsa: '1.30' }
+];
+
+const archetypes = {
+    boros: {
+        title: 'Boros Aggro // The Consistency Engine',
+        content: `
+            <p>Mastering the "Low Curve" is the most consistent path to victory in the current meta. Boros punishes decks that try to set up complex 3-card combos.</p>
+            <div style="margin: 2rem 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h4 style="color:var(--accent); margin-bottom: 1rem;">KEY PICKS</h4>
+                    <ul style="list-style: none;">
+                        <li>• <a href="#" class="card-link" data-card="Ragavan, Nimble Pilferer">Ragavan, Nimble Pilferer</a></li>
+                        <li>• <a href="#" class="card-link" data-card="Thalia, Guardian of Thraben">Thalia, Guardian</a></li>
+                        <li>• <a href="#" class="card-link" data-card="Adeline, Resplendent Cathar">Adeline, Cathar</a></li>
+                        <li>• <a href="#" class="card-link" data-card="Forth Eorlingas!">Forth Eorlingas!</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--accent); margin-bottom: 1rem;">STRATEGY</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Focus on "Tax" creatures that hinder non-creature spells. Your goal is to win by turn 4-5 before the opponent can stabilize or combo off.</p>
+                </div>
+            </div>
+        `
+    },
+    reanimator: {
+        title: 'UB Reanimator // The Cheaty Ceiling',
+        content: `
+            <p>The highest variance archetype but also the most powerful. Turn 2 wins are possible and often unbeatable.</p>
+            <div style="margin: 2rem 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h4 style="color:var(--accent); margin-bottom: 1rem;">ELITE TARGETS</h4>
+                    <ul style="list-style: none;">
+                        <li>• <a href="#" class="card-link" data-card="Archon of Cruelty">Archon of Cruelty</a></li>
+                        <li>• <a href="#" class="card-link" data-card="Atraxa, Grand Unifier">Atraxa, Grand Unifier</a></li>
+                        <li>• <a href="#" class="card-link" data-card="Griselbrand">Griselbrand</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--accent); margin-bottom: 1rem;">THE PIECES</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Prioritize <b>Entomb</b> and <b>Reanimate</b> above all else. Splash Red for <b>Sneak Attack</b> as a secondary win condition.</p>
+                </div>
+            </div>
+        `
+    },
+    artifacts: {
+        title: 'Izzet Artifacts // Mana Dominance',
+        content: `
+            <p>Leverages the incredible artifacts in the cube to power out massive spells or engines.</p>
+            <div style="margin: 2rem 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h4 style="color:var(--accent); margin-bottom: 1rem;">POWER PIECES</h4>
+                    <ul style="list-style: none;">
+                        <li>• <a href="#" class="card-link" data-card="Tinker">Tinker</a></li>
+                        <li>• <a href="#" class="card-link" data-card="Tolarian Academy">Tolarian Academy</a></li>
+                        <li>• <a href="#" class="card-link" data-card="Urza, Lord High Artificer">Urza, Lord High Artificer</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--accent); margin-bottom: 1rem;">PAYOFFS</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Combine mana rocks with <b>Upheaval</b> to reset the game while keeping your mana advantage.</p>
+                </div>
+            </div>
+        `
+    },
+    storm: {
+        title: 'Breach Storm // The Technical Test',
+        content: `
+            <p>Not for the faint of heart. Requires precise technical execution and deep knowledge of the stack.</p>
+            <div style="margin: 2rem 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h4 style="color:var(--accent); margin-bottom: 1rem;">COMBO LINE</h4>
+                    <ul style="list-style: none;">
+                        <li>• <a href="#" class="card-link" data-card="Underworld Breach">Underworld Breach</a></li>
+                        <li>• <a href="#" class="card-link" data-card="Lion's Eye Diamond">Lion's Eye Diamond</a></li>
+                        <li>• <a href="#" class="card-link" data-card="Brain Freeze">Brain Freeze</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--accent); margin-bottom: 1rem;">WARNING</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Arena assumes no actions if hand is empty. Hold <b>Full Control</b> during the loop or you will lose your LED triggers.</p>
+                </div>
+            </div>
+        `
+    }
+};
+
+const allCards = [{"name":"Enlightened Tutor","color":"W","rarity":"U","gih_wr":"51.3%"},{"name":"Mystical Tutor","color":"U","rarity":"U","gih_wr":"52.0%"},{"name":"Necromancy","color":"B","rarity":"U","gih_wr":"57.5%"},{"name":"Lotus Petal","color":"","rarity":"C","gih_wr":"54.2%"},{"name":"Wasteland","color":"","rarity":"U","gih_wr":"54.7%"},{"name":"Mox Diamond","color":"","rarity":"R","gih_wr":"56.2%"},{"name":"Recurring Nightmare","color":"B","rarity":"R","gih_wr":"52.4%"},{"name":"Gaea's Cradle","color":"","rarity":"R","gih_wr":"55.8%"},{"name":"Time Spiral","color":"U","rarity":"R","gih_wr":"53.8%"},{"name":"Grim Monolith","color":"","rarity":"R","gih_wr":"54.3%"},{"name":"Mother of Runes","color":"W","rarity":"U","gih_wr":"59.5%"},{"name":"Miscalculation","color":"U","rarity":"C","gih_wr":"54.6%"},{"name":"Frantic Search","color":"U","rarity":"C","gih_wr":"51.1%"},{"name":"Tinker","color":"U","rarity":"U","gih_wr":"59.7%"},{"name":"Memory Jar","color":"","rarity":"R","gih_wr":"53.8%"},{"name":"Parallax Wave","color":"W","rarity":"R","gih_wr":"62.8%"},{"name":"Daze","color":"U","rarity":"C","gih_wr":"56.8%"},{"name":"Entomb","color":"B","rarity":"R","gih_wr":"55.3%"},{"name":"Brain Freeze","color":"U","rarity":"U","gih_wr":"57.9%"},{"name":"Talisman of Progress","color":"","rarity":"U","gih_wr":"52.8%"},{"name":"Talisman of Dominance","color":"","rarity":"U","gih_wr":"53.3%"},{"name":"Lightning Greaves","color":"","rarity":"U","gih_wr":"53.0%"},{"name":"Skullclamp","color":"","rarity":"U","gih_wr":"55.5%"},{"name":"Trinket Mage","color":"U","rarity":"C","gih_wr":"54.6%"},{"name":"Pentad Prism","color":"","rarity":"C","gih_wr":"52.6%"},{"name":"Umezawa's Jitte","color":"","rarity":"R","gih_wr":"53.8%"},{"name":"Shelldock Isle","color":"","rarity":"R","gih_wr":"54.7%"},{"name":"Woodfall Primus","color":"G","rarity":"R","gih_wr":"50.0%"},{"name":"Flickerwisp","color":"W","rarity":"U","gih_wr":"58.5%"},{"name":"Figure of Destiny","color":"WR","rarity":"R","gih_wr":"58.3%"},{"name":"Snuff Out","color":"B","rarity":"C","gih_wr":"54.5%"},{"name":"Oust","color":"W","rarity":"U","gih_wr":"59.4%"},{"name":"Preordain","color":"U","rarity":"C","gih_wr":"54.1%"},{"name":"Primeval Titan","color":"G","rarity":"M","gih_wr":"50.4%"},{"name":"Mox Opal","color":"","rarity":"M","gih_wr":"55.7%"},{"name":"Myr Battlesphere","color":"","rarity":"R","gih_wr":"51.7%"},{"name":"Batterskull","color":"","rarity":"M","gih_wr":"51.2%"},{"name":"Gitaxian Probe","color":"U","rarity":"C","gih_wr":"53.7%"},{"name":"Griselbrand","color":"B","rarity":"M","gih_wr":"47.7%"},{"name":"Noble Hierarch","color":"G","rarity":"R","gih_wr":"56.9%"},{"name":"Knight of the Reliquary","color":"WG","rarity":"R","gih_wr":"49.4%"},{"name":"Coalition Relic","color":"","rarity":"R","gih_wr":"52.0%"},{"name":"Emrakul, the Aeons Torn","color":"","rarity":"M","gih_wr":"53.1%"},{"name":"Worldspine Wurm","color":"G","rarity":"M","gih_wr":"54.4%"},{"name":"Elvish Mystic","color":"G","rarity":"C","gih_wr":"52.9%"},{"name":"Mana Confluence","color":"","rarity":"R","gih_wr":"54.7%"},{"name":"Unexpectedly Absent","color":"W","rarity":"R","gih_wr":"59.0%"},{"name":"Flame Slash","color":"R","rarity":"C","gih_wr":"56.7%"},{"name":"Pyrokinesis","color":"R","rarity":"U","gih_wr":"56.9%"},{"name":"Pyrite Spellbomb","color":"","rarity":"C","gih_wr":"54.5%"},{"name":"Dig Through Time","color":"U","rarity":"R","gih_wr":"54.7%"},{"name":"Treasure Cruise","color":"U","rarity":"C","gih_wr":"52.6%"},{"name":"Bloodstained Mire","color":"","rarity":"R","gih_wr":"55.2%"},{"name":"Flooded Strand","color":"","rarity":"R","gih_wr":"56.8%"},{"name":"Polluted Delta","color":"","rarity":"R","gih_wr":"54.8%"},{"name":"Windswept Heath","color":"","rarity":"R","gih_wr":"56.8%"},{"name":"Wooded Foothills","color":"","rarity":"R","gih_wr":"56.4%"},{"name":"Rofellos, Llanowar Emissary","color":"G","rarity":"R","gih_wr":"52.7%"},{"name":"Ancestral Recall","color":"U","rarity":"M","gih_wr":"64.0%"},{"name":"Time Walk","color":"U","rarity":"M","gih_wr":"66.3%"},{"name":"Timetwister","color":"U","rarity":"M","gih_wr":"57.7%"},{"name":"Black Lotus","color":"","rarity":"M","gih_wr":"63.4%"},{"name":"Mox Jet","color":"","rarity":"M","gih_wr":"60.7%"},{"name":"Mox Pearl","color":"","rarity":"M","gih_wr":"61.4%"},{"name":"Mox Sapphire","color":"","rarity":"M","gih_wr":"62.0%"},{"name":"Balance","color":"W","rarity":"M","gih_wr":"55.3%"},{"name":"Animate Dead","color":"B","rarity":"U","gih_wr":"58.0%"},{"name":"Hymn to Tourach","color":"B","rarity":"U","gih_wr":"55.4%"},{"name":"Fireblast","color":"R","rarity":"U","gih_wr":"57.2%"},{"name":"Wheel of Fortune","color":"R","rarity":"M","gih_wr":"55.2%"},{"name":"Fastbond","color":"G","rarity":"M","gih_wr":"51.9%"},{"name":"Dack Fayden","color":"UR","rarity":"M","gih_wr":"55.2%"},{"name":"Lion's Eye Diamond","color":"","rarity":"M","gih_wr":"55.7%"},{"name":"Sol Ring","color":"","rarity":"M","gih_wr":"61.9%"},{"name":"Badlands","color":"","rarity":"R","gih_wr":"55.1%"},{"name":"Bayou","color":"","rarity":"R","gih_wr":"53.7%"},{"name":"Library of Alexandria","color":"","rarity":"M","gih_wr":"55.2%"},{"name":"Mishra's Workshop","color":"","rarity":"M","gih_wr":"56.9%"},{"name":"Savannah","color":"","rarity":"R","gih_wr":"54.7%"},{"name":"Scrubland","color":"","rarity":"R","gih_wr":"54.8%"},{"name":"Taiga","color":"","rarity":"R","gih_wr":"55.1%"},{"name":"Tolarian Academy","color":"","rarity":"M","gih_wr":"61.6%"},{"name":"Tropical Island","color":"","rarity":"R","gih_wr":"53.9%"},{"name":"Tundra","color":"","rarity":"R","gih_wr":"56.6%"},{"name":"Underground Sea","color":"","rarity":"R","gih_wr":"55.8%"},{"name":"Kolaghan's Command","color":"BR","rarity":"R","gih_wr":"54.7%"},{"name":"Thraben Inspector","color":"W","rarity":"C","gih_wr":"59.2%"},{"name":"Tireless Tracker","color":"G","rarity":"R","gih_wr":"52.7%"},{"name":"Cryptbreaker","color":"B","rarity":"R","gih_wr":"48.7%"},{"name":"Smuggler's Copter","color":"","rarity":"R","gih_wr":"56.2%"},{"name":"Spell Pierce","color":"U","rarity":"C","gih_wr":"55.5%"},{"name":"Duress","color":"B","rarity":"C","gih_wr":"51.5%"},{"name":"Karn, Scion of Urza","color":"","rarity":"M","gih_wr":"54.6%"},{"name":"Llanowar Elves","color":"G","rarity":"C","gih_wr":"54.0%"},{"name":"Teferi, Hero of Dominaria","color":"WU","rarity":"M","gih_wr":"57.0%"},{"name":"Crucible of Worlds","color":"","rarity":"M","gih_wr":"50.1%"},{"name":"Midnight Reaper","color":"B","rarity":"R","gih_wr":"52.8%"},{"name":"Overgrown Tomb","color":"","rarity":"R","gih_wr":"51.6%"},{"name":"Sacred Foundry","color":"","rarity":"R","gih_wr":"58.0%"},{"name":"Steam Vents","color":"","rarity":"R","gih_wr":"55.4%"},{"name":"Temple Garden","color":"","rarity":"R","gih_wr":"55.0%"},{"name":"Watery Grave","color":"","rarity":"R","gih_wr":"54.5%"},{"name":"Blood Crypt","color":"","rarity":"R","gih_wr":"54.0%"},{"name":"Breeding Pool","color":"","rarity":"R","gih_wr":"53.8%"},{"name":"Godless Shrine","color":"","rarity":"R","gih_wr":"54.4%"},{"name":"Hallowed Fountain","color":"","rarity":"R","gih_wr":"56.4%"},{"name":"Stomping Ground","color":"","rarity":"R","gih_wr":"54.3%"},{"name":"Narset, Parter of Veils","color":"U","rarity":"U","gih_wr":"55.2%"},{"name":"Nissa, Who Shakes the World","color":"G","rarity":"R","gih_wr":"53.3%"},{"name":"Tamiyo, Collector of Tales","color":"UG","rarity":"R","gih_wr":"52.1%"},{"name":"Teferi, Time Raveler","color":"WU","rarity":"R","gih_wr":"60.0%"},{"name":"Saheeli, Sublime Artificer","color":"UR","rarity":"U","gih_wr":"52.6%"},{"name":"Elvish Reclaimer","color":"G","rarity":"R","gih_wr":"52.1%"},{"name":"Golos, Tireless Pilgrim","color":"","rarity":"R","gih_wr":"52.5%"},{"name":"Brazen Borrower","color":"U","rarity":"M","gih_wr":"56.9%"},{"name":"Bonecrusher Giant","color":"R","rarity":"R","gih_wr":"57.6%"},{"name":"Embereth Shieldbreaker","color":"R","rarity":"U","gih_wr":"54.1%"},{"name":"Robber of the Rich","color":"R","rarity":"M","gih_wr":"57.0%"},{"name":"Once Upon a Time","color":"G","rarity":"R","gih_wr":"54.4%"},{"name":"Questing Beast","color":"G","rarity":"M","gih_wr":"53.6%"},{"name":"Oko, Thief of Crowns","color":"UG","rarity":"M","gih_wr":"56.5%"},{"name":"Fabled Passage","color":"","rarity":"R","gih_wr":"54.9%"},{"name":"Woe Strider","color":"B","rarity":"R","gih_wr":"51.2%"},{"name":"Underworld Breach","color":"R","rarity":"R","gih_wr":"59.9%"},{"name":"Kroxa, Titan of Death's Hunger","color":"BR","rarity":"M","gih_wr":"52.5%"},{"name":"Uro, Titan of Nature's Wrath","color":"UG","rarity":"M","gih_wr":"53.3%"},{"name":"Soul-Guide Lantern","color":"","rarity":"U","gih_wr":"52.5%"},{"name":"Lurrus of the Dream-Den","color":"WB","rarity":"R","gih_wr":"54.9%"},{"name":"Lutri, the Spellchaser","color":"UR","rarity":"R","gih_wr":""},{"name":"Indatha Triome","color":"","rarity":"R","gih_wr":"51.5%"},{"name":"Ketria Triome","color":"","rarity":"R","gih_wr":"53.9%"},{"name":"Raugrin Triome","color":"","rarity":"R","gih_wr":"55.7%"},{"name":"Savai Triome","color":"","rarity":"R","gih_wr":"54.3%"},{"name":"Zagoth Triome","color":"","rarity":"R","gih_wr":"52.4%"},{"name":"Giver of Runes","color":"W","rarity":"R","gih_wr":"58.6%"},{"name":"Ranger-Captain of Eos","color":"W","rarity":"M","gih_wr":"57.5%"},{"name":"Force of Negation","color":"U","rarity":"R","gih_wr":"55.5%"},{"name":"Urza, Lord High Artificer","color":"U","rarity":"M","gih_wr":"55.6%"},{"name":"Yawgmoth, Thran Physician","color":"B","rarity":"M","gih_wr":"50.0%"},{"name":"Seasoned Pyromancer","color":"R","rarity":"M","gih_wr":"57.3%"},{"name":"Wrenn and Six","color":"RG","rarity":"M","gih_wr":"55.5%"},{"name":"Talisman of Conviction","color":"","rarity":"U","gih_wr":"53.2%"},{"name":"Talisman of Creativity","color":"","rarity":"U","gih_wr":"53.0%"},{"name":"Talisman of Curiosity","color":"","rarity":"U","gih_wr":"51.1%"},{"name":"Sunbaked Canyon","color":"","rarity":"R","gih_wr":"58.2%"},{"name":"Containment Priest","color":"W","rarity":"R","gih_wr":"58.2%"},{"name":"Elder Gargaroth","color":"G","rarity":"M","gih_wr":"48.6%"},{"name":"Blood Artist","color":"B","rarity":"U","gih_wr":"49.9%"},{"name":"Grim Lavamancer","color":"R","rarity":"R","gih_wr":"57.7%"},{"name":"Hellrider","color":"R","rarity":"R","gih_wr":"56.7%"},{"name":"Craterhoof Behemoth","color":"G","rarity":"M","gih_wr":"50.8%"},{"name":"Explore","color":"G","rarity":"C","gih_wr":"51.5%"},{"name":"Aether Spellbomb","color":"","rarity":"C","gih_wr":"55.0%"},{"name":"Fire Covenant","color":"BR","rarity":"U","gih_wr":"55.4%"},{"name":"Skyclave Apparition","color":"W","rarity":"R","gih_wr":"59.6%"},{"name":"Thieving Skydiver","color":"U","rarity":"R","gih_wr":"54.1%"},{"name":"Lotus Cobra","color":"G","rarity":"R","gih_wr":"54.3%"},{"name":"Omnath, Locus of Creation","color":"WURG","rarity":"M","gih_wr":"56.1%"},{"name":"Thoughtseize","color":"B","rarity":"R","gih_wr":"54.3%"},{"name":"Abrade","color":"R","rarity":"U","gih_wr":"55.1%"},{"name":"Glorybringer","color":"R","rarity":"R","gih_wr":"55.7%"},{"name":"Hazoret the Fervent","color":"R","rarity":"M","gih_wr":"51.0%"},{"name":"Goldspan Dragon","color":"R","rarity":"M","gih_wr":"55.2%"},{"name":"Magda, Brazen Outlaw","color":"R","rarity":"R","gih_wr":"55.5%"},{"name":"Esika's Chariot","color":"G","rarity":"R","gih_wr":"55.6%"},{"name":"Showdown of the Skalds","color":"WR","rarity":"R","gih_wr":"58.8%"},{"name":"Fatal Push","color":"B","rarity":"U","gih_wr":"55.4%"},{"name":"Chandra, Torch of Defiance","color":"R","rarity":"M","gih_wr":"54.7%"},{"name":"Bomat Courier","color":"","rarity":"R","gih_wr":"57.1%"},{"name":"Concealed Courtyard","color":"","rarity":"R","gih_wr":"56.4%"},{"name":"Spirebluff Canal","color":"","rarity":"R","gih_wr":"54.7%"},{"name":"Esper Sentinel","color":"W","rarity":"R","gih_wr":"57.0%"},{"name":"Archon of Cruelty","color":"B","rarity":"M","gih_wr":"54.2%"},{"name":"Unmarked Grave","color":"B","rarity":"R","gih_wr":"50.0%"},{"name":"Unholy Heat","color":"R","rarity":"C","gih_wr":"55.5%"},{"name":"Tireless Provisioner","color":"G","rarity":"U","gih_wr":"50.5%"},{"name":"Grist, the Hunger Tide","color":"BG","rarity":"M","gih_wr":"54.3%"},{"name":"Kaldra Compleat","color":"","rarity":"M","gih_wr":"50.9%"},{"name":"Nettlecyst","color":"","rarity":"R","gih_wr":"53.1%"},{"name":"Urza's Saga","color":"","rarity":"R","gih_wr":"59.5%"},{"name":"Upheaval","color":"U","rarity":"R","gih_wr":"58.8%"},{"name":"Vindicate","color":"WB","rarity":"R","gih_wr":"53.0%"},{"name":"Zuran Orb","color":"","rarity":"U","gih_wr":"54.4%"},{"name":"Elite Spellbinder","color":"W","rarity":"R","gih_wr":"58.3%"},{"name":"Expressive Iteration","color":"UR","rarity":"U","gih_wr":"55.2%"},{"name":"Witherbloom Command","color":"BG","rarity":"R","gih_wr":"52.3%"},{"name":"Timeless Dragon","color":"W","rarity":"R","gih_wr":"56.6%"},{"name":"Bone Shards","color":"B","rarity":"C","gih_wr":"53.0%"},{"name":"Damn","color":"B","rarity":"R","gih_wr":"53.8%"},{"name":"Dauthi Voidwalker","color":"B","rarity":"R","gih_wr":"54.1%"},{"name":"Dragon's Rage Channeler","color":"R","rarity":"U","gih_wr":"56.6%"},{"name":"Mine Collapse","color":"R","rarity":"C","gih_wr":"56.9%"},{"name":"Chatterfang, Squirrel General","color":"G","rarity":"M","gih_wr":"50.0%"},{"name":"Ignoble Hierarch","color":"G","rarity":"R","gih_wr":"56.0%"},{"name":"Territorial Kavu","color":"RG","rarity":"R","gih_wr":"52.8%"},{"name":"Arid Mesa","color":"","rarity":"R","gih_wr":"57.1%"},{"name":"Marsh Flats","color":"","rarity":"R","gih_wr":"58.1%"},{"name":"Misty Rainforest","color":"","rarity":"R","gih_wr":"56.1%"},{"name":"Scalding Tarn","color":"","rarity":"R","gih_wr":"55.7%"},{"name":"Verdant Catacombs","color":"","rarity":"R","gih_wr":"55.2%"},{"name":"Titania, Protector of Argoth","color":"G","rarity":"M","gih_wr":"56.0%"},{"name":"Portable Hole","color":"W","rarity":"U","gih_wr":"56.7%"},{"name":"Mana Tithe","color":"W","rarity":"R","gih_wr":"58.5%"},{"name":"Swords to Plowshares","color":"W","rarity":"R","gih_wr":"61.3%"},{"name":"Brainstorm","color":"U","rarity":"R","gih_wr":"53.7%"},{"name":"Counterspell","color":"U","rarity":"R","gih_wr":"57.1%"},{"name":"Memory Lapse","color":"U","rarity":"R","gih_wr":"58.5%"},{"name":"Time Warp","color":"U","rarity":"M","gih_wr":"55.5%"},{"name":"Dark Ritual","color":"B","rarity":"R","gih_wr":"52.6%"},{"name":"Demonic Tutor","color":"B","rarity":"M","gih_wr":"56.2%"},{"name":"Inquisition of Kozilek","color":"B","rarity":"R","gih_wr":"54.3%"},{"name":"Faithless Looting","color":"R","rarity":"R","gih_wr":"52.1%"},{"name":"Lightning Bolt","color":"R","rarity":"R","gih_wr":"59.5%"},{"name":"Channel","color":"G","rarity":"M","gih_wr":"52.7%"},{"name":"Natural Order","color":"G","rarity":"M","gih_wr":"55.5%"},{"name":"Regrowth","color":"G","rarity":"R","gih_wr":"51.2%"},{"name":"Lightning Helix","color":"WR","rarity":"R","gih_wr":"57.3%"},{"name":"Hullbreacher","color":"U","rarity":"R","gih_wr":"57.0%"},{"name":"Vampiric Tutor","color":"B","rarity":"M","gih_wr":"51.9%"},{"name":"Manamorphose","color":"RG","rarity":"U","gih_wr":"54.4%"},{"name":"Mana Crypt","color":"","rarity":"M","gih_wr":"61.6%"},{"name":"Adeline, Resplendent Cathar","color":"W","rarity":"R","gih_wr":"60.0%"},{"name":"Cathar Commando","color":"W","rarity":"C","gih_wr":"56.3%"},{"name":"Consider","color":"U","rarity":"C","gih_wr":"53.0%"},{"name":"Graveyard Trespasser","color":"B","rarity":"R","gih_wr":"54.8%"},{"name":"Jadar, Ghoulcaller of Nephalia","color":"B","rarity":"R","gih_wr":"53.4%"},{"name":"Thalia, Guardian of Thraben","color":"W","rarity":"R","gih_wr":"57.2%"},{"name":"Concealing Curtains","color":"B","rarity":"R","gih_wr":"53.8%"},{"name":"Ulvenwald Oddity","color":"G","rarity":"R","gih_wr":"53.3%"},{"name":"Bloodtithe Harvester","color":"BR","rarity":"U","gih_wr":"54.9%"},{"name":"Lion Sash","color":"W","rarity":"R","gih_wr":"54.6%"},{"name":"March of Otherworldly Light","color":"W","rarity":"R","gih_wr":"56.2%"},{"name":"Touch the Spirit Realm","color":"W","rarity":"U","gih_wr":"53.1%"},{"name":"The Wandering Emperor","color":"W","rarity":"M","gih_wr":"56.9%"},{"name":"Fable of the Mirror-Breaker","color":"R","rarity":"R","gih_wr":"60.0%"},{"name":"Reckoner Bankbuster","color":"","rarity":"R","gih_wr":"55.0%"},{"name":"Boseiju, Who Endures","color":"","rarity":"R","gih_wr":"51.0%"},{"name":"Otawara, Soaring City","color":"","rarity":"R","gih_wr":"55.8%"},{"name":"Tenacious Underdog","color":"B","rarity":"R","gih_wr":"53.0%"},{"name":"Jetmir's Garden","color":"","rarity":"R","gih_wr":"53.3%"},{"name":"Raffine's Tower","color":"","rarity":"R","gih_wr":"53.5%"},{"name":"Spara's Headquarters","color":"","rarity":"R","gih_wr":"53.6%"},{"name":"Xander's Lounge","color":"","rarity":"R","gih_wr":"53.3%"},{"name":"Ziatora's Proving Ground","color":"","rarity":"R","gih_wr":"51.0%"},{"name":"Displacer Kitten","color":"U","rarity":"R","gih_wr":"50.0%"},{"name":"Minsc & Boo, Timeless Heroes","color":"RG","rarity":"M","gih_wr":"59.5%"},{"name":"Anointed Peacekeeper","color":"W","rarity":"R","gih_wr":"56.9%"},{"name":"Leyline Binding","color":"W","rarity":"R","gih_wr":"54.2%"},{"name":"Serra Paragon","color":"W","rarity":"M","gih_wr":"56.8%"},{"name":"Cut Down","color":"B","rarity":"U","gih_wr":"54.6%"},{"name":"Evolved Sleeper","color":"B","rarity":"R","gih_wr":"52.6%"},{"name":"Liliana of the Veil","color":"B","rarity":"M","gih_wr":"53.6%"},{"name":"Sheoldred, the Apocalypse","color":"B","rarity":"M","gih_wr":"56.8%"},{"name":"Tear Asunder","color":"G","rarity":"U","gih_wr":"51.8%"},{"name":"Loran of the Third Path","color":"W","rarity":"R","gih_wr":"57.6%"},{"name":"Gix, Yawgmoth Praetor","color":"B","rarity":"M","gih_wr":"52.8%"},{"name":"Go for the Throat","color":"B","rarity":"U","gih_wr":"53.6%"},{"name":"Razorlash Transmogrant","color":"","rarity":"R","gih_wr":"48.3%"},{"name":"Third Path Iconoclast","color":"UR","rarity":"U","gih_wr":"54.2%"},{"name":"The Mightstone and Weakstone","color":"","rarity":"R","gih_wr":"55.4%"},{"name":"Portal to Phyrexia","color":"","rarity":"M","gih_wr":"49.6%"},{"name":"Chromatic Star","color":"","rarity":"U","gih_wr":"52.8%"},{"name":"Mishra's Bauble","color":"","rarity":"U","gih_wr":"56.5%"},{"name":"Coveted Jewel","color":"","rarity":"R","gih_wr":"52.9%"},{"name":"Retrofitter Foundry","color":"","rarity":"R","gih_wr":"57.2%"},{"name":"Laelia, the Blade Reforged","color":"R","rarity":"R","gih_wr":"59.8%"},{"name":"Tarmogoyf","color":"G","rarity":"M","gih_wr":"52.0%"},{"name":"Leovold, Emissary of Trest","color":"UBG","rarity":"M","gih_wr":"52.8%"},{"name":"Karakas","color":"","rarity":"M","gih_wr":"62.4%"},{"name":"Oracle of the Alpha","color":"U","rarity":"M","gih_wr":"50.9%"},{"name":"Archfiend of the Dross","color":"B","rarity":"R","gih_wr":"53.1%"},{"name":"Sheoldred's Edict","color":"B","rarity":"U","gih_wr":"54.5%"},{"name":"Atraxa, Grand Unifier","color":"WUBG","rarity":"M","gih_wr":"54.3%"},{"name":"Glissa Sunslayer","color":"BG","rarity":"R","gih_wr":"48.8%"},{"name":"Blackcleave Cliffs","color":"","rarity":"R","gih_wr":"54.8%"},{"name":"Copperline Gorge","color":"","rarity":"R","gih_wr":"54.7%"},{"name":"Razorverge Thicket","color":"","rarity":"R","gih_wr":"55.9%"},{"name":"Monastery Mentor","color":"W","rarity":"M","gih_wr":"52.1%"},{"name":"Sunfall","color":"W","rarity":"R","gih_wr":"58.0%"},{"name":"Chrome Host Seedshark","color":"U","rarity":"R","gih_wr":"54.4%"},{"name":"Faerie Mastermind","color":"U","rarity":"R","gih_wr":"55.4%"},{"name":"Etali, Primal Conqueror","color":"R","rarity":"R","gih_wr":"50.6%"},{"name":"Stoke the Flames","color":"R","rarity":"U","gih_wr":"55.5%"},{"name":"Eagles of the North","color":"W","rarity":"C","gih_wr":"57.4%"},{"name":"Reprieve","color":"W","rarity":"U","gih_wr":"59.6%"},{"name":"Lórien Revealed","color":"U","rarity":"C","gih_wr":"53.9%"},{"name":"Stern Scolding","color":"U","rarity":"U","gih_wr":"54.0%"},{"name":"Orcish Bowmasters","color":"B","rarity":"R","gih_wr":"63.5%"},{"name":"Troll of Khazad-dûm","color":"B","rarity":"C","gih_wr":"53.0%"},{"name":"Oliphaunt","color":"R","rarity":"C","gih_wr":"55.2%"},{"name":"Delighted Halfling","color":"G","rarity":"R","gih_wr":"54.8%"},{"name":"Generous Ent","color":"G","rarity":"C","gih_wr":"52.6%"},{"name":"The One Ring","color":"","rarity":"M","gih_wr":"56.6%"},{"name":"Palantír of Orthanc","color":"","rarity":"M","gih_wr":"51.9%"},{"name":"Nissa, Resurgent Animist","color":"G","rarity":"M","gih_wr":"52.3%"},{"name":"Ragavan, Nimble Pilferer","color":"R","rarity":"M","gih_wr":"60.0%"},{"name":"Collective Brutality","color":"B","rarity":"R","gih_wr":"53.4%"},{"name":"Lingering Souls","color":"W","rarity":"U","gih_wr":"57.0%"},{"name":"Emrakul, the Promised End","color":"","rarity":"M","gih_wr":"50.7%"},{"name":"Snapcaster Mage","color":"U","rarity":"M","gih_wr":"54.2%"},{"name":"Virtue of Persistence","color":"B","rarity":"M","gih_wr":"53.0%"},{"name":"Restless Cottage","color":"","rarity":"R","gih_wr":"50.2%"},{"name":"Restless Vinestalk","color":"","rarity":"R","gih_wr":"51.4%"},{"name":"Goblin Bombardment","color":"R","rarity":"R","gih_wr":"57.5%"},{"name":"Sneak Attack","color":"R","rarity":"M","gih_wr":"56.0%"},{"name":"Utopia Sprawl","color":"G","rarity":"U","gih_wr":"53.4%"},{"name":"Get Lost","color":"W","rarity":"R","gih_wr":"55.3%"},{"name":"Kitesail Larcenist","color":"U","rarity":"R","gih_wr":"53.9%"},{"name":"Malcolm, Alluring Scoundrel","color":"U","rarity":"R","gih_wr":"55.2%"},{"name":"Spyglass Siren","color":"U","rarity":"U","gih_wr":"56.0%"},{"name":"Tishana's Tidebinder","color":"U","rarity":"R","gih_wr":"55.2%"},{"name":"Bitter Triumph","color":"B","rarity":"U","gih_wr":"53.9%"},{"name":"Deep-Cavern Bat","color":"B","rarity":"U","gih_wr":"54.3%"},{"name":"Preacher of the Schism","color":"B","rarity":"R","gih_wr":"54.4%"},{"name":"Bonehoard Dracosaur","color":"R","rarity":"M","gih_wr":"57.9%"},{"name":"Inti, Seneschal of the Sun","color":"R","rarity":"R","gih_wr":"58.8%"},{"name":"Sentinel of the Nameless City","color":"G","rarity":"R","gih_wr":"55.8%"},{"name":"Unearth","color":"B","rarity":"C","gih_wr":"54.3%"},{"name":"Eternal Witness","color":"G","rarity":"U","gih_wr":"50.8%"},{"name":"Mana Vault","color":"","rarity":"M","gih_wr":"56.4%"},{"name":"Flash","color":"U","rarity":"R","gih_wr":"58.2%"},{"name":"Fiery Confluence","color":"R","rarity":"R","gih_wr":"58.4%"},{"name":"Show and Tell","color":"U","rarity":"M","gih_wr":"48.8%"},{"name":"Proft's Eidetic Memory","color":"U","rarity":"R","gih_wr":"54.1%"},{"name":"No More Lies","color":"WU","rarity":"U","gih_wr":"58.9%"},{"name":"Commercial District","color":"","rarity":"R","gih_wr":"53.8%"},{"name":"Elegant Parlor","color":"","rarity":"R","gih_wr":"56.6%"},{"name":"Hedge Maze","color":"","rarity":"R","gih_wr":"52.8%"},{"name":"Lush Portico","color":"","rarity":"R","gih_wr":"52.5%"},{"name":"Meticulous Archive","color":"","rarity":"R","gih_wr":"55.6%"},{"name":"Raucous Theater","color":"","rarity":"R","gih_wr":"53.8%"},{"name":"Shadowy Backstreet","color":"","rarity":"R","gih_wr":"54.7%"},{"name":"Thundering Falls","color":"","rarity":"R","gih_wr":"54.1%"},{"name":"Undercity Sewers","color":"","rarity":"R","gih_wr":"54.5%"},{"name":"Underground Mortuary","color":"","rarity":"R","gih_wr":"51.2%"},{"name":"Nurturing Pixie","color":"W","rarity":"U","gih_wr":"54.3%"},{"name":"Three Steps Ahead","color":"U","rarity":"R","gih_wr":"56.2%"},{"name":"Caustic Bronco","color":"B","rarity":"R","gih_wr":"55.0%"},{"name":"Forsaken Miner","color":"B","rarity":"U","gih_wr":"52.2%"},{"name":"Bristly Bill, Spine Sower","color":"G","rarity":"M","gih_wr":"56.5%"},{"name":"Pillage the Bog","color":"BG","rarity":"R","gih_wr":"50.5%"},{"name":"Lavaspur Boots","color":"","rarity":"U","gih_wr":"53.8%"},{"name":"Stoneforge Mystic","color":"W","rarity":"M","gih_wr":"61.1%"},{"name":"Prismatic Vista","color":"","rarity":"M","gih_wr":"56.8%"},{"name":"Harvester of Misery","color":"B","rarity":"M","gih_wr":"55.0%"},{"name":"Generous Plunderer","color":"R","rarity":"M","gih_wr":"58.2%"},{"name":"Legion Extruder","color":"R","rarity":"M","gih_wr":"55.4%"},{"name":"Vaultborn Tyrant","color":"G","rarity":"M","gih_wr":"49.9%"},{"name":"Nexus of Becoming","color":"","rarity":"M","gih_wr":"52.1%"},{"name":"Path to Exile","color":"W","rarity":"R","gih_wr":"54.8%"},{"name":"Mana Drain","color":"U","rarity":"M","gih_wr":"59.2%"},{"name":"Reanimate","color":"B","rarity":"R","gih_wr":"55.7%"},{"name":"Pest Infestation","color":"G","rarity":"R","gih_wr":"55.5%"},{"name":"Fractured Identity","color":"WU","rarity":"M","gih_wr":"59.4%"},{"name":"Ajani, Nacatl Pariah","color":"W","rarity":"M","gih_wr":"64.1%"},{"name":"Tamiyo, Inquisitive Student","color":"U","rarity":"M","gih_wr":"57.9%"},{"name":"Ocelot Pride","color":"W","rarity":"M","gih_wr":"61.6%"},{"name":"Phelia, Exuberant Shepherd","color":"W","rarity":"R","gih_wr":"61.7%"},{"name":"Crabomination","color":"B","rarity":"R","gih_wr":"56.7%"},{"name":"Emperor of Bones","color":"B","rarity":"R","gih_wr":"57.7%"},{"name":"Nethergoyf","color":"B","rarity":"M","gih_wr":"57.0%"},{"name":"Warren Soultrader","color":"B","rarity":"R","gih_wr":"44.4%"},{"name":"Detective's Phoenix","color":"R","rarity":"R","gih_wr":"58.0%"},{"name":"Galvanic Discharge","color":"R","rarity":"C","gih_wr":"57.7%"},{"name":"Ghostfire Slice","color":"R","rarity":"U","gih_wr":"56.7%"},{"name":"Fanatic of Rhonas","color":"G","rarity":"R","gih_wr":"54.8%"},{"name":"Malevolent Rumble","color":"G","rarity":"C","gih_wr":"56.6%"},{"name":"Six","color":"G","rarity":"R","gih_wr":"53.2%"},{"name":"Sowing Mycospawn","color":"G","rarity":"R","gih_wr":"55.4%"},{"name":"Springheart Nantuko","color":"G","rarity":"R","gih_wr":"53.9%"},{"name":"Nadu, Winged Wisdom","color":"UG","rarity":"R","gih_wr":"58.8%"},{"name":"Phlage, Titan of Fire's Fury","color":"WR","rarity":"M","gih_wr":"62.2%"},{"name":"Psychic Frog","color":"UB","rarity":"R","gih_wr":"58.8%"},{"name":"Deceptive Landscape","color":"","rarity":"C","gih_wr":"52.3%"},{"name":"Foreboding Landscape","color":"","rarity":"C","gih_wr":"51.9%"},{"name":"Shifting Woodland","color":"","rarity":"R","gih_wr":"53.2%"},{"name":"Tranquil Landscape","color":"","rarity":"C","gih_wr":"53.8%"},{"name":"Kappa Cannoneer","color":"U","rarity":"R","gih_wr":"54.8%"},{"name":"Toxic Deluge","color":"B","rarity":"R","gih_wr":"53.3%"},{"name":"Sylvan Safekeeper","color":"G","rarity":"R","gih_wr":"54.0%"},{"name":"Solitude","color":"W","rarity":"M","gih_wr":"60.5%"},{"name":"Subtlety","color":"U","rarity":"M","gih_wr":"56.3%"},{"name":"Grief","color":"B","rarity":"M","gih_wr":"54.1%"},{"name":"Fury","color":"R","rarity":"M","gih_wr":"60.7%"},{"name":"Endurance","color":"G","rarity":"M","gih_wr":"53.6%"},{"name":"Prismatic Ending","color":"W","rarity":"M","gih_wr":"57.2%"},{"name":"Dismember","color":"B","rarity":"M","gih_wr":"57.5%"},{"name":"Persist","color":"B","rarity":"M","gih_wr":"53.0%"},{"name":"Booster Tutor","color":"B","rarity":"U","gih_wr":"54.4%"},{"name":"Beza, the Bounding Spring","color":"W","rarity":"M","gih_wr":"59.4%"},{"name":"Stormchaser's Talent","color":"U","rarity":"R","gih_wr":"55.4%"},{"name":"Thundertrap Trainer","color":"U","rarity":"R","gih_wr":"54.2%"},{"name":"Hired Claw","color":"R","rarity":"R","gih_wr":"58.9%"},{"name":"Keen-Eyed Curator","color":"G","rarity":"R","gih_wr":"54.6%"},{"name":"Scrapshooter","color":"G","rarity":"R","gih_wr":"51.9%"},{"name":"Jace, the Mind Sculptor","color":"U","rarity":"M","gih_wr":"55.4%"},{"name":"Birds of Paradise","color":"G","rarity":"R","gih_wr":"56.3%"},{"name":"Baleful Strix","color":"UB","rarity":"R","gih_wr":"55.6%"},{"name":"Enduring Innocence","color":"W","rarity":"R","gih_wr":"56.0%"},{"name":"Overlord of the Mistmoors","color":"W","rarity":"M","gih_wr":"57.1%"},{"name":"Abhorrent Oculus","color":"U","rarity":"M","gih_wr":"52.8%"},{"name":"Enduring Curiosity","color":"U","rarity":"R","gih_wr":"54.4%"},{"name":"Floodpits Drowner","color":"U","rarity":"U","gih_wr":"56.3%"},{"name":"Overlord of the Balemurk","color":"B","rarity":"M","gih_wr":"56.2%"},{"name":"Fear of Missing Out","color":"R","rarity":"R","gih_wr":"57.2%"},{"name":"Overlord of the Boilerbilges","color":"R","rarity":"M","gih_wr":"56.9%"},{"name":"Screaming Nemesis","color":"R","rarity":"M","gih_wr":"59.3%"},{"name":"Kaito, Bane of Nightmares","color":"UB","rarity":"M","gih_wr":"55.8%"},{"name":"Blazemire Verge","color":"","rarity":"R","gih_wr":"54.4%"},{"name":"Floodfarm Verge","color":"","rarity":"R","gih_wr":"56.7%"},{"name":"Gloomlake Verge","color":"","rarity":"R","gih_wr":"54.8%"},{"name":"Hushwood Verge","color":"","rarity":"R","gih_wr":"53.6%"},{"name":"Thornspire Verge","color":"","rarity":"R","gih_wr":"53.3%"},{"name":"Scythecat Cub","color":"G","rarity":"R","gih_wr":"56.7%"},{"name":"Dark Confidant","color":"B","rarity":"M","gih_wr":"54.2%"},{"name":"Night's Whisper","color":"B","rarity":"C","gih_wr":"52.7%"},{"name":"Remand","color":"U","rarity":"U","gih_wr":"57.9%"},{"name":"Ivora, Insatiable Heir","color":"R","rarity":"U","gih_wr":"57.0%"},{"name":"Sun-Blessed Healer","color":"W","rarity":"U","gih_wr":"56.0%"},{"name":"Kellan, Planar Trailblazer","color":"R","rarity":"R","gih_wr":"58.3%"},{"name":"Searslicer Goblin","color":"R","rarity":"R","gih_wr":"56.6%"},{"name":"Burst Lightning","color":"R","rarity":"C","gih_wr":"56.9%"},{"name":"Expedition Map","color":"","rarity":"C","gih_wr":"51.7%"},{"name":"Gideon, Ally of Zendikar","color":"W","rarity":"M","gih_wr":"57.5%"},{"name":"Kytheon, Hero of Akros","color":"W","rarity":"M","gih_wr":"57.9%"},{"name":"Jace, Vryn's Prodigy","color":"U","rarity":"M","gih_wr":"54.3%"},{"name":"Sylvan Caryatid","color":"G","rarity":"R","gih_wr":"52.8%"},{"name":"Stock Up","color":"U","rarity":"U","gih_wr":"57.4%"},{"name":"Loot, the Pathfinder","color":"URG","rarity":"M","gih_wr":"53.6%"},{"name":"Bleachbone Verge","color":"","rarity":"R","gih_wr":"55.3%"},{"name":"Riverpyre Verge","color":"","rarity":"R","gih_wr":"55.6%"},{"name":"Sunbillow Verge","color":"","rarity":"R","gih_wr":"58.0%"},{"name":"Wastewood Verge","color":"","rarity":"R","gih_wr":"52.2%"},{"name":"Willowrush Verge","color":"","rarity":"R","gih_wr":"54.0%"},{"name":"Galvanic Blast","color":"R","rarity":"C","gih_wr":"55.4%"},{"name":"Chrome Mox","color":"","rarity":"M","gih_wr":"54.5%"},{"name":"Ugin, Eye of the Storms","color":"","rarity":"M","gih_wr":"59.1%"},{"name":"Clarion Conqueror","color":"W","rarity":"R","gih_wr":"60.0%"},{"name":"Elspeth, Storm Slayer","color":"W","rarity":"M","gih_wr":"60.3%"},{"name":"Sage of the Skies","color":"W","rarity":"R","gih_wr":"60.9%"},{"name":"Fresh Start","color":"U","rarity":"U","gih_wr":"56.3%"},{"name":"Cori-Steel Cutter","color":"R","rarity":"R","gih_wr":"57.5%"},{"name":"Magmatic Hellkite","color":"R","rarity":"R","gih_wr":"54.3%"},{"name":"Tersa Lightshatter","color":"R","rarity":"R","gih_wr":"55.4%"},{"name":"Heritage Reclamation","color":"G","rarity":"C","gih_wr":"49.4%"},{"name":"Surrak, Elusive Hunter","color":"G","rarity":"R","gih_wr":"53.4%"},{"name":"Ultima","color":"W","rarity":"R","gih_wr":"56.0%"},{"name":"Astrologian's Planisphere","color":"U","rarity":"R","gih_wr":"52.8%"},{"name":"Cecil, Dark Knight","color":"B","rarity":"R","gih_wr":"55.5%"},{"name":"Sephiroth, Fabled SOLDIER","color":"B","rarity":"M","gih_wr":"51.7%"},{"name":"Suplex","color":"R","rarity":"C","gih_wr":"54.0%"},{"name":"Sazh's Chocobo","color":"G","rarity":"U","gih_wr":"49.6%"},{"name":"Tifa Lockhart","color":"G","rarity":"R","gih_wr":"50.4%"},{"name":"Sin, Spira's Punishment","color":"UBG","rarity":"R","gih_wr":"47.8%"},{"name":"Vivi Ornitier","color":"UR","rarity":"M","gih_wr":"52.7%"},{"name":"Starting Town","color":"","rarity":"R","gih_wr":"56.0%"},{"name":"Cryptic Command","color":"U","rarity":"R","gih_wr":"56.0%"},{"name":"Tezzeret, Cruel Captain","color":"","rarity":"M","gih_wr":"55.3%"},{"name":"Cosmogrand Zenith","color":"W","rarity":"M","gih_wr":"58.8%"},{"name":"Consult the Star Charts","color":"U","rarity":"R","gih_wr":"53.9%"},{"name":"Quantum Riddler","color":"U","rarity":"M","gih_wr":"57.9%"},{"name":"Elegy Acolyte","color":"B","rarity":"R","gih_wr":"55.5%"},{"name":"Tragic Trajectory","color":"B","rarity":"U","gih_wr":"53.9%"},{"name":"Nova Hellkite","color":"R","rarity":"R","gih_wr":"59.1%"},{"name":"Icetill Explorer","color":"G","rarity":"R","gih_wr":"53.8%"},{"name":"Mightform Harmonizer","color":"G","rarity":"R","gih_wr":"49.5%"},{"name":"Ouroboroid","color":"G","rarity":"M","gih_wr":"57.3%"},{"name":"Pinnacle Emissary","color":"UR","rarity":"R","gih_wr":"54.6%"},{"name":"The Endstone","color":"","rarity":"M","gih_wr":"48.8%"},{"name":"Green Sun's Zenith","color":"G","rarity":"R","gih_wr":"56.3%"},{"name":"Ancient Tomb","color":"","rarity":"M","gih_wr":"55.5%"},{"name":"Celestial Colonnade","color":"","rarity":"R","gih_wr":"57.1%"},{"name":"Creeping Tar Pit","color":"","rarity":"R","gih_wr":"54.9%"},{"name":"Strip Mine","color":"","rarity":"M","gih_wr":"58.5%"},{"name":"Aang's Iceberg","color":"W","rarity":"R","gih_wr":"56.8%"},{"name":"The Legend of Yangchen","color":"W","rarity":"M","gih_wr":"58.0%"},{"name":"The Legend of Kuruk","color":"U","rarity":"M","gih_wr":"56.3%"},{"name":"Wan Shi Tong, Librarian","color":"U","rarity":"M","gih_wr":"56.9%"},{"name":"Badgermole Cub","color":"G","rarity":"M","gih_wr":"57.1%"},{"name":"Earthbender Ascension","color":"G","rarity":"R","gih_wr":"52.9%"},{"name":"Aang, Swift Savior","color":"WU","rarity":"R","gih_wr":"59.2%"},{"name":"Bumi, Unleashed","color":"RG","rarity":"M","gih_wr":"51.4%"},{"name":"Abandoned Air Temple","color":"","rarity":"R","gih_wr":"59.5%"},{"name":"Ba Sing Se","color":"","rarity":"R","gih_wr":"52.7%"},{"name":"Ademi of the Silkchutes","color":"W","rarity":"R","gih_wr":"60.1%"},{"name":"Nia, Skysail Storyteller","color":"R","rarity":"M","gih_wr":"58.8%"},{"name":"Makdee and Itla, Skysnarers","color":"WU","rarity":"R","gih_wr":"57.1%"},{"name":"Multiversal Passage","color":"","rarity":"R","gih_wr":"56.7%"},{"name":"Mystic Confluence","color":"U","rarity":"R","gih_wr":"57.5%"},{"name":"Ponder","color":"U","rarity":"C","gih_wr":"54.6%"},{"name":"Yuffie, Materia Hunter","color":"R","rarity":"R","gih_wr":"55.2%"},{"name":"Flitterwing Nuisance","color":"U","rarity":"R","gih_wr":"54.8%"},{"name":"Loch Mare","color":"U","rarity":"M","gih_wr":"55.7%"},{"name":"Bitterbloom Bearer","color":"B","rarity":"M","gih_wr":"52.9%"},{"name":"Moonshadow","color":"B","rarity":"M","gih_wr":"53.6%"},{"name":"Scuzzback Scrounger","color":"R","rarity":"R","gih_wr":"55.4%"},{"name":"Sear","color":"R","rarity":"U","gih_wr":"55.2%"},{"name":"Formidable Speaker","color":"G","rarity":"R","gih_wr":"55.1%"},{"name":"Deceit","color":"UB","rarity":"M","gih_wr":"52.5%"},{"name":"Figure of Fable","color":"WG","rarity":"R","gih_wr":"59.1%"},{"name":"Vibrance","color":"RG","rarity":"M","gih_wr":"56.8%"},{"name":"Wistfulness","color":"UG","rarity":"M","gih_wr":"55.0%"},{"name":"Triplicate Titan","color":"","rarity":"R","gih_wr":"48.3%"},{"name":"Force of Will","color":"U","rarity":"M","gih_wr":"57.8%"},{"name":"Chain Lightning","color":"R","rarity":"C","gih_wr":"57.9%"},{"name":"Exploration","color":"G","rarity":"R","gih_wr":"46.7%"},{"name":"Life // Death","color":"BG","rarity":"U","gih_wr":"53.5%"},{"name":"Barrowgoyf","color":"B","rarity":"R","gih_wr":"59.3%"},{"name":"Pyrogoyf","color":"R","rarity":"R","gih_wr":"60.8%"},{"name":"Currency Converter","color":"","rarity":"R","gih_wr":"55.0%"},{"name":"Glimmer Lens","color":"W","rarity":"R","gih_wr":"58.6%"},{"name":"Staff of the Storyteller","color":"W","rarity":"R","gih_wr":"58.8%"},{"name":"Broadside Bombardiers","color":"R","rarity":"R","gih_wr":"60.6%"},{"name":"Fallen Shinobi","color":"UB","rarity":"R","gih_wr":"54.6%"},{"name":"Gut, True Soul Zealot","color":"R","rarity":"U","gih_wr":"57.9%"},{"name":"Agent Bishop, Man in Black","color":"W","rarity":"R","gih_wr":"57.5%"},{"name":"Leonardo, Leader in Blue","color":"W","rarity":"U","gih_wr":"57.9%"},{"name":"Leonardo, Sewer Samurai","color":"W","rarity":"M","gih_wr":"55.6%"},{"name":"Super Shredder","color":"B","rarity":"M","gih_wr":"54.2%"},{"name":"Raphael, the Nightwatcher","color":"R","rarity":"R","gih_wr":"56.9%"},{"name":"Ravenous Robots","color":"R","rarity":"R","gih_wr":"50.5%"},{"name":"Leatherhead, Swamp Stalker","color":"G","rarity":"R","gih_wr":"51.3%"},{"name":"Michelangelo, Improviser","color":"G","rarity":"M","gih_wr":"47.1%"},{"name":"Michelangelo, Weirdness to 11","color":"G","rarity":"R","gih_wr":"52.6%"},{"name":"Mutagen Man, Living Ooze","color":"G","rarity":"R","gih_wr":"50.5%"},{"name":"Bebop & Rocksteady","color":"BG","rarity":"R","gih_wr":"47.8%"},{"name":"Krang, Utrom Warlord","color":"","rarity":"M","gih_wr":"45.8%"},{"name":"Michelangelo, the Heart","color":"G","rarity":"M","gih_wr":"52.7%"},{"name":"Torsten, Founder of Benalia","color":"WG","rarity":"M","gih_wr":"52.7%"},{"name":"Carnage Interpreter","color":"BR","rarity":"R","gih_wr":"56.8%"},{"name":"Mox Emerald","color":"","rarity":"R","gih_wr":"61.0%"},{"name":"Mox Ruby","color":"","rarity":"R","gih_wr":"60.9%"},{"name":"Candelabra of Tawnos","color":"","rarity":"R","gih_wr":"54.6%"},{"name":"Mind Twist","color":"B","rarity":"R","gih_wr":"54.4%"},{"name":"Urza's Bauble","color":"","rarity":"U","gih_wr":"55.8%"},{"name":"Volcanic Island","color":"","rarity":"R","gih_wr":"54.5%"},{"name":"Winds of Abandon","color":"W","rarity":"R","gih_wr":"53.3%"},{"name":"Plateau","color":"","rarity":"R","gih_wr":"59.1%"},{"name":"Echo of Eons","color":"U","rarity":"R","gih_wr":"52.5%"}];
+
+let filteredCards = [...allCards];
+let currentSort = { col: 'gih_wr', dir: 'desc' };
+
+document.addEventListener('DOMContentLoaded', async () => {
+    initPowerGrid();
+    showArchetype('boros');
+    
+    renderTable();
+    initDBControls();
+
+    initTooltips();
+});
+
+function initDBControls() {
+    // Search
+    document.getElementById('db-search').addEventListener('input', (e) => {
+        applyFilters();
+    });
+
+    // Color Filters
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            applyFilters();
+        });
+    });
+
+    // Rarity Filters
+    document.querySelectorAll('.rarity-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.target.classList.toggle('active');
+            applyFilters();
+        });
+    });
+}
+
+function applyFilters() {
+    const search = document.getElementById('db-search').value.toLowerCase();
+    const activeColor = document.querySelector('.filter-btn.active').dataset.filter;
+    const activeRarities = Array.from(document.querySelectorAll('.rarity-btn.active')).map(btn => btn.dataset.rarity);
+
+    filteredCards = allCards.filter(card => {
+        const matchesSearch = card.name.toLowerCase().includes(search);
+        
+        let matchesColor = true;
+        if (activeColor !== 'all') {
+            if (activeColor === 'multi') matchesColor = card.color.length > 1;
+            else if (activeColor === 'artifact') matchesColor = card.color === '';
+            else matchesColor = card.color === activeColor;
+        }
+
+        const matchesRarity = activeRarities.length === 0 || activeRarities.includes(card.rarity);
+
+        return matchesSearch && matchesColor && matchesRarity;
+    });
+
+    renderTable();
+}
+
+function sortTable(col) {
+    if (currentSort.col === col) {
+        currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentSort.col = col;
+        currentSort.dir = 'desc';
+    }
+
+    filteredCards.sort((a, b) => {
+        let valA = a[col];
+        let valB = b[col];
+
+        if (col === 'gih_wr') {
+            valA = parseFloat(valA) || 0;
+            valB = parseFloat(valB) || 0;
+        }
+
+        if (valA < valB) return currentSort.dir === 'asc' ? -1 : 1;
+        if (valA > valB) return currentSort.dir === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+    renderTable();
+}
+
+function renderTable() {
+    const tbody = document.getElementById('db-body');
+    tbody.innerHTML = '';
+
+    filteredCards.forEach(card => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><a href="#" class="card-link" data-card="${card.name}">${card.name}</a></td>
+            <td><span class="mana-symbol">${card.color || 'A'}</span></td>
+            <td>${card.rarity}</td>
+            <td style="color: ${parseFloat(card.gih_wr) > 58 ? 'var(--accent)' : 'inherit'}">${card.gih_wr || 'N/A'}</td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    initTooltips(); // Re-link tooltips for new rows
+}
+
+// Draft Simulator Logic
+let currentPack = [];
+
+async function generatePack() {
+    const container = document.getElementById('pack-container');
+    const feedback = document.getElementById('pick-feedback');
+    
+    container.innerHTML = '<div class="placeholder-pack">GENERATING PACK...</div>';
+    feedback.style.display = 'none';
+
+    // Shuffle and pick 15
+    const shuffled = [...allCards].sort(() => 0.5 - Math.random());
+    currentPack = shuffled.slice(0, 15);
+
+    container.innerHTML = '';
+    
+    for (const card of currentPack) {
+        const row = document.createElement('div');
+        row.className = 'pack-card';
+        row.innerHTML = `<div style="padding: 20px; text-align:center;">LOADING...</div>`;
+        container.appendChild(row);
+
+        try {
+            const res = await fetch(`https://api.scryfall.com/cards/named?fuzzy=${encodeURIComponent(card.name)}`);
+            const data = await res.json();
+            const imgUri = data.image_uris ? data.image_uris.normal : data.card_faces[0].image_uris.normal;
+            row.innerHTML = `<img src="${imgUri}" alt="${card.name}" onclick="makePick('${card.name}')">`;
+        } catch (e) {
+            row.innerHTML = `<div style="padding: 20px;">${card.name}</div>`;
+        }
+    }
+}
+
+function makePick(pickedName) {
+    const feedback = document.getElementById('pick-feedback');
+    const pickedCard = currentPack.find(c => c.name === pickedName);
+    
+    // Find highest WR in pack
+    const bestCard = [...currentPack].sort((a, b) => (parseFloat(b.gih_wr) || 0) - (parseFloat(a.gih_wr) || 0))[0];
+
+    feedback.style.display = 'block';
+    
+    let advice = '';
+    const pickWR = parseFloat(pickedCard.gih_wr) || 0;
+    const bestWR = parseFloat(bestCard.gih_wr) || 0;
+
+    if (pickedName === bestCard.name) {
+        advice = `<span style="color:#00ff00">✓ OPTIMAL PICK.</span> ${pickedName} is statistically the strongest card in this pack (GIH WR: ${pickedCard.gih_wr}).`;
+    } else if (bestWR - pickWR < 3) {
+        advice = `<span style="color:var(--accent)">✓ STRONG PICK.</span> Good evaluation. While ${bestCard.name} has a slightly higher win rate (${bestCard.gih_wr}), ${pickedName} (${pickedCard.gih_wr}) is a top-tier inclusion.`;
+    } else {
+        advice = `<span style="color:#ff4444">⚠ SUBOPTIMAL DATA.</span> You picked ${pickedName} (${pickedCard.gih_wr || 'N/A'}), but 17Lands data suggests ${bestCard.name} (${bestCard.gih_wr}) is the priority here.`;
+    }
+
+    feedback.innerHTML = `
+        <h3 style="color:var(--accent); margin-bottom: 0.5rem;">DRAFT ANALYSIS</h3>
+        <p>${advice}</p>
+        <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-secondary);">
+            Pack Average WR: ${(currentPack.reduce((acc, c) => acc + (parseFloat(c.gih_wr) || 50), 0) / 15).toFixed(1)}% | 
+            Your Pick: ${pickedName}
+        </div>
+    `;
+
+    // Highlight pick
+    document.querySelectorAll('.pack-card').forEach(el => {
+        el.style.opacity = '0.5';
+        if (el.querySelector('img').alt === pickedName) el.style.opacity = '1';
+    });
+}
+
+function initPowerGrid() {
+    const grid = document.querySelector('.power-grid');
+    powerCards.forEach(card => {
+        const el = document.createElement('div');
+        el.className = 'power-card';
+        el.innerHTML = `
+            <h4 class="card-link" data-card="${card.name}">${card.name}</h4>
+            <div class="winrate-bar"><div class="winrate-fill" style="width: ${card.wr}"></div></div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary);">
+                <span>GIH WR: <b>${card.wr}</b></span>
+                <span>ALSA: <b>${card.alsa}</b></span>
+            </div>
+        `;
+        grid.appendChild(el);
+    });
+}
+
+function showArchetype(id) {
+    const container = document.getElementById('archetype-content');
+    const arch = archetypes[id];
+    
+    container.style.opacity = '0';
+    
+    setTimeout(() => {
+        container.innerHTML = `
+            <h3 style="margin-bottom: 1rem; color: var(--accent);">${arch.title}</h3>
+            ${arch.content}
+        `;
+        container.style.opacity = '1';
+        initTooltips(); // Re-init tooltips for new links
+    }, 200);
+
+    // Update nav buttons
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.innerText.toLowerCase().includes(id)) btn.classList.add('active');
+    });
+}
+
+function initTooltips() {
+    const tooltip = document.getElementById('card-tooltip');
+    
+    document.querySelectorAll('.card-link').forEach(link => {
+        link.addEventListener('mouseenter', async (e) => {
+            const cardName = e.target.getAttribute('data-card');
+            tooltip.innerHTML = '<div style="padding: 20px; color: var(--accent); background: var(--bg-dark);">FETCHING ART...</div>';
+            tooltip.style.display = 'block';
+            
+            try {
+                const res = await fetch(`https://api.scryfall.com/cards/named?fuzzy=${encodeURIComponent(cardName)}`);
+                const data = await res.json();
+                const imgUri = data.image_uris ? data.image_uris.normal : data.card_faces[0].image_uris.normal;
+                tooltip.innerHTML = `<img src="${imgUri}" alt="${cardName}">`;
+            } catch (err) {
+                tooltip.style.display = 'none';
+            }
+        });
+
+        link.addEventListener('mousemove', (e) => {
+            tooltip.style.top = (e.clientY + 20) + 'px';
+            tooltip.style.left = (e.clientX + 20) + 'px';
+            
+            // Boundary checks
+            if (e.clientX + 270 > window.innerWidth) {
+                tooltip.style.left = (e.clientX - 270) + 'px';
+            }
+            if (e.clientY + 350 > window.innerHeight) {
+                tooltip.style.top = (e.clientY - 350) + 'px';
+            }
+        });
+
+        link.addEventListener('mouseleave', () => {
+            tooltip.style.display = 'none';
+        });
+    });
+}

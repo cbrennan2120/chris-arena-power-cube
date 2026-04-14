@@ -1,0 +1,346 @@
+:root {
+    --bg-dark: #0d0d0d;
+    --paper: #f4e4bc; /* Classic Parchment */
+    --accent: #d4af37; /* Gold Filigree */
+    --accent-glow: rgba(212, 175, 55, 0.4);
+    --text-primary: #f4e4bc;
+    --text-secondary: #a0a0a0;
+    --glass: rgba(0, 0, 0, 0.7);
+    --glass-border: #332b0a;
+    --card-bg: #1a1505;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Times New Roman', Georgia, serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 1) 0%, rgba(5, 5, 5, 1) 100%),
+        url('https://www.transparenttextures.com/patterns/dark-leather.png');
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes manaPulse {
+    0% { text-shadow: 0 0 10px var(--accent-glow); transform: scale(1); }
+    100% { text-shadow: 0 0 40px var(--accent), 0 0 60px var(--accent-glow); transform: scale(1.02); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero Section */
+.hero {
+    height: 90vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 2rem;
+    border-bottom: 8px double var(--accent);
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.6;
+    z-index: -1;
+    filter: sepia(0.3) contrast(1.2);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.9));
+    z-index: -1;
+}
+
+.hero-content {
+    max-width: 1000px;
+    animation: fadeInDown 1.5s ease-out;
+}
+
+.glitch-text {
+    font-size: clamp(3rem, 10vw, 5rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    position: relative;
+    text-shadow: 0 0 20px var(--accent-glow);
+    letter-spacing: 5px;
+    background: linear-gradient(to bottom, var(--accent), #8a6d3b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: manaPulse 3s infinite alternate;
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: 3rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    text-shadow: 0 0 15px var(--accent-glow);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+}
+
+.stat-divider {
+    width: 2px;
+    height: 60px;
+    background: var(--accent);
+    opacity: 0.3;
+}
+
+/* Archetype Browser */
+section {
+    max-width: 1200px;
+    margin: 6rem auto;
+    padding: 0 2rem;
+}
+
+.section-header {
+    margin-bottom: 3rem;
+    border-left: 5px solid var(--accent);
+    padding-left: 1.5rem;
+}
+
+.archetype-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    background: var(--card-bg);
+    border: 3px solid var(--accent);
+    color: var(--accent);
+    padding: 1rem 2rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 5px 5px 0px rgba(0,0,0,0.5);
+}
+
+.nav-btn:hover, .nav-btn.active {
+    background: var(--accent);
+    color: #000;
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0px rgba(0,0,0,0.8);
+}
+
+.archetype-container {
+    background: var(--paper);
+    color: #1a1505;
+    padding: 3rem;
+    border: 10px solid #1a1505;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.2), 0 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+    transition: opacity 0.3s ease;
+}
+
+/* Power Cards */
+.power-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.power-card {
+    background: #000;
+    border: 4px solid var(--accent);
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.power-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0 30px var(--accent);
+}
+
+.winrate-bar {
+    height: 6px;
+    background: #333;
+    margin: 1rem 0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.winrate-fill {
+    height: 100%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+}
+
+/* Draft Simulator */
+.pack-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5rem;
+    margin: 3rem 0;
+}
+
+.pack-card {
+    background: #000;
+    border: 5px solid #000;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pack-card:hover {
+    transform: scale(1.1) rotate(2deg);
+    border-color: var(--accent);
+    box-shadow: 0 0 30px var(--accent);
+    z-index: 50;
+}
+
+.pack-card img { width: 100%; border-radius: 4px; display: block; }
+
+.feedback-card {
+    background: var(--paper);
+    color: #1a1505;
+    border: 8px solid #1a1505;
+    padding: 2.5rem;
+    margin-top: 3rem;
+    box-shadow: 10px 10px 0px var(--accent);
+    animation: fadeIn 0.5s ease;
+}
+
+/* Database Section */
+.db-controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+#db-search {
+    background: #000;
+    border: 3px solid var(--accent);
+    color: var(--text-primary);
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    flex: 1;
+    min-width: 300px;
+}
+
+.filter-group, .rarity-group {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #1a1505;
+    border: 2px solid var(--accent);
+}
+
+.filter-btn, .rarity-btn {
+    background: #2a220a;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.filter-btn.active, .rarity-btn.active {
+    background: var(--accent);
+    color: #000;
+}
+
+.table-container {
+    background: var(--paper);
+    padding: 1rem;
+    border: 8px solid #332b0a;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    overflow-x: auto;
+}
+
+table { width: 100%; border-collapse: collapse; color: #1a1505; }
+
+th {
+    text-align: left;
+    padding: 1.2rem;
+    background: #1a1505;
+    color: var(--accent);
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid var(--accent);
+}
+
+th:hover { background: var(--accent); color: #000; }
+
+td { padding: 1rem 1.2rem; border-bottom: 1px solid rgba(0,0,0,0.1); font-weight: 600; }
+
+tr:nth-child(even) { background: rgba(0,0,0,0.05); }
+
+/* Card Tooltips */
+#card-tooltip {
+    position: fixed;
+    z-index: 1000;
+    pointer-events: none;
+    border: 10px solid #000;
+    border-radius: 12px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.8);
+    display: none;
+    background: #000;
+}
+
+#card-tooltip img { width: 250px; display: block; }
+
+.card-link {
+    color: #b11f1f;
+    text-decoration: none;
+    font-weight: 800;
+    border-bottom: 2px solid #b11f1f;
+    cursor: pointer;
+}
+
+.card-link:hover { color: #0e68ab; border-color: #0e68ab; }
+
+footer {
+    text-align: center;
+    padding: 4rem;
+    background: #000;
+    border-top: 5px solid var(--accent);
+    color: var(--accent);
+    margin-top: 6rem;
+}
